@@ -1269,7 +1269,7 @@ void adventurerAction(struct gameState *state)
   int drawntreasure=0;
   int cardDrawn;
   int z = 0;// this is the counter for the temp hand
-  while(drawntreasure<2){
+  while(drawntreasure<3){
   if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
     shuffle(currentPlayer, state);
   }
@@ -1298,6 +1298,8 @@ void smithyAction(struct gameState *state, int handPos)
   for (i = 0; i < 3; i++)
   {
     drawCard(currentPlayer, state);
+    drawCard(currentPlayer, state);
+    drawCard(currentPlayer, state);
   }
       
   //discard card from hand
@@ -1311,7 +1313,7 @@ void villageAction(struct gameState *state, int handPos)
       drawCard(currentPlayer, state);
       
       //+2 Actions
-      state->numActions = state->numActions + 2;
+      state->numActions = state->numActions + 3;
       
       //discard played card from hand
       discardCard(handPos, currentPlayer, state, 0);
@@ -1325,7 +1327,7 @@ void cutpurseAction(struct gameState *state, int handPos)
   int currentPlayer = whoseTurn(state);
 
   updateCoins(currentPlayer, state, 2);
-      for (i = 0; i < state->numPlayers; i++)
+      for (i = 1; i < state->numPlayers; i++)
   {
     if (i != currentPlayer)
       {
