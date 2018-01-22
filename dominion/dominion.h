@@ -136,6 +136,6 @@ void villageAction(struct gameState *state, int handPos);
 
 void cutpurseAction(struct gameState *state, int handPos);
 
-void seaHagAction(struct gameState *state, int handPos);
+void seaHagAction(struct gameState *state);
 
 #endif
