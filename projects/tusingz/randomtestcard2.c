@@ -90,9 +90,9 @@ int main(){
 	printf("Num Tests run: %d \n", numTests);
 	printf("Village failed %d times \n", fails);
 	printf("Total Villages played : %d \n", numVillageTotal);
-	printf("Village didn't draw the right number of cards %d times", failDraw);
+	printf("Village didn't draw the right number of cards %d times\n", failDraw);
 	printf("Total of cards drawn or underdrawn : %d \n", excessCards);
-	printf("Village didn't add the right number of actions %d times", failAction);
+	printf("Village didn't add the right number of actions %d times\n", failAction);
 	printf("Total of cards drawn or underdrawn : %d \n", excessActions);
 
 	return check;

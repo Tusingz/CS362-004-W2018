@@ -100,7 +100,7 @@ int main(){
 
 	printf("Num Tests run: %d \n", numTests);
 	printf("Adventurer failed %d times \n", fails);
-	printf("Adventurer didn't draw the right number of cards %d times", failDraw);
+	printf("Adventurer didn't draw the right number of cards %d times\n", failDraw);
 	printf("Total Adventurers played : %d \n", numAdventurerTotal);
 	printf("Number of times adventurer didn't draw treasure : %d \n", notTreasure);
 	printf("Total of cards drawn or underdrawn : %d \n", excessCards);

@@ -82,7 +82,7 @@ int main(){
 
 	printf("Num Tests run: %d \n", numTests);
 	printf("Smithy failed %d times \n", fails);
-	printf("Smithy didn't draw the right number of cards %d times", failDraw);
+	printf("Smithy didn't draw the right number of cards %d times\n", failDraw);
 	printf("Total Smithies played : %d \n", numSmithyTotal);
 	printf("Total of cards drawn or underdrawn : %d \n", excessCards);
 
