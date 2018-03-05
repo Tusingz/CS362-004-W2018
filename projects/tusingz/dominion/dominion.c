@@ -1298,8 +1298,6 @@ void smithyAction(struct gameState *state, int handPos)
   for (i = 0; i < 3; i++)
   {
     drawCard(currentPlayer, state);
-    drawCard(currentPlayer, state);
-    drawCard(currentPlayer, state);
   }
       
   //discard card from hand

@@ -1,0 +1,12 @@
+Bugs in Teammates Code:
+
+These errors where all found by running my tests:
+
+Discard function doesn't work correctly
+	I found this out by running my unit test and the discard function seems to not discard cards correctly
+The sea_hag in turn doesn't correctly discard the right amount of cards from the player
+	This was found by running my fourth card test.
+
+The village gives the correct amount of cards to the player but it gives the player 1 too many actions.
+
+The adventurer draws 3 treasure cards instead of 2.

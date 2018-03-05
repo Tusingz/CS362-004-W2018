@@ -1,0 +1,41 @@
+        -:    0:Source:unitTest1.c
+        -:    0:Graph:unitTest1.gcno
+        -:    0:Data:unitTest1.gcda
+        -:    0:Runs:4
+        -:    0:Programs:1
+        -:    1:#include "dominion.h"
+        -:    2:#include "dominion_helpers.h"
+        -:    3:#include <string.h>
+        -:    4:#include <stdio.h>
+        -:    5:#include <assert.h>
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:// set NOISY_TEST to 0 to remove printfs from output
+        -:    9:#define NOISY_TEST 1
+        -:   10://test draw card
+        4:   11:int main(){
+        -:   12:	int i, i2;
+        4:   13:	int seed = 4;
+        4:   14:	int numPlayer = 2;
+        -:   15:	int check;
+        4:   16:	int card[10] = {adventurer, council_room, feast, gardens, mine
+        -:   17:		, remodel, smithy, village, baron, great_hall};
+        -:   18:	struct gameState testGame;
+        -:   19:
+        -:   20:	#if(NOISY_TEST == 1)
+        4:   21:	printf("Test Drawing cards until max hand size \n\n");
+        -:   22:	#endif
+        -:   23:
+        4:   24:	check = initializeGame(numPlayer, card, seed, &testGame);
+        -:   25:
+     1980:   26:	for (i = 6; i < MAX_HAND; ++i)
+        -:   27:	{
+     5928:   28:		for (i2 = 0; i2 < 2; ++i2)
+        -:   29:		{
+     3952:   30:			drawCard(i2, &testGame);
+     3952:   31:			assert(testGame.handCount[i2] = i);
+        -:   32:		}
+        -:   33:	}
+        -:   34:
+        4:   35:	printf("All tests passed!\n");
+        -:   36:}
