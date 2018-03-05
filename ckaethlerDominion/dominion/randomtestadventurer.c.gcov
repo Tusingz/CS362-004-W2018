@@ -1,0 +1,252 @@
+        -:    0:Source:randomtestadventurer.c
+        -:    0:Graph:randomtestadventurer.gcno
+        -:    0:Data:randomtestadventurer.gcda
+        -:    0:Runs:2
+        -:    0:Programs:1
+        -:    1:/*****
+        -:    2:** AUTHOR: CATHERINE KAETHLER
+        -:    3:** CLASS: CS 362
+        -:    4:** DUE DATE: FEBRUARY 4, 2018
+        -:    5:** DESCRIPTION: TESTS THE CARD ADVENTURER IN DOMINION.C
+        -:    6:*****/
+        -:    7:
+        -:    8:/*****************************************************************************/
+        -:    9:
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include <string.h>
+        -:   13:#include <stdio.h>
+        -:   14:#include <assert.h>
+        -:   15:#include "rngs.h"
+        -:   16:#include <stdlib.h>
+        -:   17:#include <time.h>
+        -:   18:
+        -:   19:/*****************************************************************************/
+        -:   20:
+        -:   21:#define TESTCARD "ADVENTURER"
+        -:   22:
+        -:   23:/*****************************************************************************/
+        -:   24:
+        2:   25:int main() 
+        -:   26:{
+        2:   27:	int m, numTests = 0;
+    20002:   28:	for (m = 0; m < 10000; m++)
+        -:   29:	{
+    20000:   30:		int x, treasureCount = 0;
+    20000:   31:		int seed = rand();
+    20000:   32:		int numPlayers = rand() % 4 + 1;
+    20000:   33:		int thisPlayer = rand() % 5;
+    20000:   34:		int otherPlayer = rand() % 5;
+    45016:   35:		while (thisPlayer == otherPlayer)
+        -:   36:		{
+     5016:   37:			otherPlayer = rand() % 5;
+        -:   38:		}
+        -:   39:
+        -:   40:		// VARIABLES OUTLINED FOR ADVENTURER GAMEPLAY
+    20000:   41:	    int newCards = 2;
+    20000:   42:	    int newActions = 0;
+    20000:   43:	    int newBuys = 0;
+    20000:   44:	    int discard = 0;
+    20000:   45:	    int xtraCoins = 0;
+    20000:   46:	    int shuffledCards = 0;
+        -:   47:
+        -:   48:	    // VARIABLES FOR GAMEPLAY
+    20000:   49:	    int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
+        -:   50:		struct gameState G, testG;
+    20000:   51:		int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   52:				sea_hag, tribute, smithy, council_room};
+        -:   53:
+        -:   54:		// TEST VARIABLE DECLARATIONS
+    20000:   55:		int errors = 0;
+        -:   56:		int testHand, thisHand, testDeck, thisDeck, testCoin, thisCoin;
+        -:   57:		int i, thisAction, testAction, thisSupply, testSupply;
+        -:   58:		int thisBuy, testBuy;
+    20000:   59:		int j = 0;
+        -:   60:
+        -:   61:		// INITIALIZE GAME STATE AND GET DISCARD/TREASURE CARD COUNT
+    20000:   62:		initializeGame(numPlayers, k, seed, &G);
+    20000:   63:		x = G.deckCount[thisPlayer] - 1;
+    20000:   64:		if (x < 0)
+        -:   65:		{
+     4052:   66:			shuffle(thisPlayer, &G);
+        -:   67:		}
+    84102:   68:		while(x >= 0)
+        -:   69:		{
+    44102:   70:			if((G.deck[thisPlayer][x] == gold) || (G.deck[thisPlayer][x] == silver)
+    44102:   71:				|| (G.deck[thisPlayer][x] == copper))
+        -:   72:			{
+    31896:   73:				treasureCount++;
+    63792:   74:				if(treasureCount >= 2)
+        -:   75:				{
+    15948:   76:					x = 0;
+        -:   77:				}
+        -:   78:			}
+        -:   79:			else
+        -:   80:			{
+    12206:   81:				discard++;
+        -:   82:				
+        -:   83:			}
+    44102:   84:			x--;
+        -:   85:		}
+    20000:   86:		int discardDeck = G.discardCount[thisPlayer] + discard;
+        -:   87:
+    20000:   88:		printf("----------------- Testing Card: %s ----------------\n", TESTCARD);
+    20000:   89:		printf("\n---- RANDOM VARIABLES USING ----\n");
+    20000:   90:		printf("Seed is: %d\n", seed);
+    20000:   91:		printf("The number of players is: %d\n", numPlayers);
+    20000:   92:		printf("This player's number is: %d\n", thisPlayer);
+    20000:   93:		printf("The other player's number is: %d\n", otherPlayer);
+        -:   94:
+        -:   95:		// copy the game state to a test case
+    20000:   96:		memcpy(&testG, &G, sizeof(struct gameState));
+    20000:   97:		cardEffect(adventurer, choice1, choice2, choice3, &testG, handpos, &bonus);
+        -:   98:
+        -:   99:		// TEST: COMPARES HAND COUNT BEFORE AND AFTER ADVENTURER CARD USED-------
+    20000:  100:		int testDiscardDeck = testG.deckCount[thisPlayer];
+    20000:  101:		printf("\n---- TESTING DISCARD DECK COUNT ----\n");
+    20000:  102:		if (discardDeck != testDiscardDeck)			
+        -:  103:		{
+    18094:  104:			printf("FAILED DISCARD COUNT TEST:\n");
+    18094:  105:			printf("discard count = %d, expected = %d\n", discardDeck, testDiscardDeck);
+    18094:  106:			errors++;
+        -:  107:		}
+        -:  108:		else
+        -:  109:		{
+     1906:  110:			printf("SUCCESS: DISCARD COUNT TEST PASSED!\n");	
+        -:  111:		}
+        -:  112:
+        -:  113:		// TEST: COMPARES HAND COUNT BEFORE AND AFTER ADVENTURER CARD USED-------
+    20000:  114:		printf("\n---- TESTING HAND COUNT ----\n");
+    20000:  115:		if (discardDeck != testHand)
+        -:  116:		{
+    12734:  117:			printf("FAILED HAND COUNT TEST:\n");
+    12734:  118:			printf("hand count = %d, expected = %d\n", testHand, thisHand);
+    12734:  119:			errors++;
+        -:  120:		}
+        -:  121:		else
+        -:  122:		{
+     7266:  123:			printf("SUCCESS: HAND COUNT TEST PASSED!\n");	
+        -:  124:		}
+        -:  125:
+        -:  126:		// TEST: CHECKS TO SEE THAT ONLY MONETARY CARDS WERE ADDED-------
+    20000:  127:		printf("\n---- TESTING DRAWN TREASURE CARDS ----\n");
+        -:  128:		int thisCard;
+    60000:  129:		for (x = 0; x < 2; x++)
+        -:  130:		{
+    40000:  131:			thisCard = testG.hand[thisPlayer][testG.handCount[thisPlayer] - x];
+    40000:  132:			if ((thisCard != copper) || (thisCard != gold) || (thisCard != silver))
+        -:  133:			{
+    40000:  134:				printf("FAILED DRAWN TREASURE TEST:\n");
+    40000:  135:				printf("number of card drawn = %d, card number = %d\n", x, thisCard);
+    40000:  136:				errors++;
+        -:  137:			}
+        -:  138:			else
+        -:  139:			{
+    #####:  140:				printf("SUCCESS: DRAWN TREASURE TEST PASSED!\n");	
+        -:  141:			}
+        -:  142:		}
+        -:  143:
+        -:  144:		// TEST: COMPARES DECK COUNT BEFORE AND AFTER ADVENTURE CARD USED----------
+    20000:  145:		thisDeck = G.deckCount[thisPlayer] - newCards + shuffledCards - discard;
+    20000:  146:		testDeck = testG.deckCount[thisPlayer];
+    20000:  147:		printf("\n---- TESTING DECK COUNT ----\n");
+    20000:  148:		if (testDeck != thisDeck)
+        -:  149:		{
+    16070:  150:			printf("FAILED DECK COUNT TEST:\n");
+    16070:  151:			printf("deck count = %d, expected = %d\n", testDeck, thisDeck);
+    16070:  152:			errors++;
+        -:  153:		}
+        -:  154:		else
+        -:  155:		{
+     3930:  156:			printf("SUCCESS: DECK COUNT TEST PASSED!\n");
+        -:  157:		}
+        -:  158:
+        -:  159:		// TEST: COMPARES BUY COUNT BEFORE AND AFTER ADVENTURER CARD USED--------
+    20000:  160:		thisBuy = G.numBuys + newBuys;
+    20000:  161:		testBuy = testG.numBuys;
+    20000:  162:		printf("\n---- TESTING BUY COUNT ----\n");
+    20000:  163:		if (thisBuy != testBuy)
+        -:  164:		{
+    #####:  165:			printf("FAILED BUY COUNT TEST:\n");
+    #####:  166:			printf("buy count = %d, expected = %d\n", testBuy, thisBuy);
+    #####:  167:			errors++;
+        -:  168:		}
+        -:  169:		else
+        -:  170:		{
+    20000:  171:			printf("SUCCESS: BUY COUNT TEST PASSED!\n");	
+        -:  172:		}
+        -:  173:
+        -:  174:		// TEST: COMPARES ACTION COUNT BEFORE AND AFTER ADVENTURER CARD USED-----
+    20000:  175:		thisAction = G.numActions + newActions;
+    20000:  176:		testAction = testG.numActions;
+    20000:  177:		printf("\n---- TESTING ACTION COUNT ----\n");
+    20000:  178:		if (thisAction != testAction)
+        -:  179:		{
+    #####:  180:			printf("FAILED ACTION COUNT TEST:\n");
+    #####:  181:			printf("hand count = %d, expected = %d\n", testAction, thisAction);
+    #####:  182:			errors++;
+        -:  183:		}
+        -:  184:		else
+        -:  185:		{
+    20000:  186:			printf("SUCCESS: ACTION COUNT TEST PASSED!\n");	
+        -:  187:		}
+        -:  188:
+        -:  189:		// TEST: COMPARES COIN COUNT BEFORE AND AFTER ADVENTURER CARD USED-------
+    20000:  190:		thisCoin = G.coins + xtraCoins;
+    20000:  191:		testCoin = testG.coins;
+    20000:  192:		printf("\n---- TESTING COIN COUNT ----\n");
+    20000:  193:		if (thisCoin != testCoin)
+        -:  194:		{
+    #####:  195:			printf("FAILED COIN COUNT TEST:\n");
+    #####:  196:			printf("coins = %d, expected = %d\n", testCoin, thisCoin);
+    #####:  197:			errors++;
+        -:  198:		}
+        -:  199:		else
+        -:  200:		{
+    20000:  201:			printf("SUCCESS: COIN COUNT TEST PASSED!\n");
+        -:  202:		}
+        -:  203:
+        -:  204:		// TEST: OTHER PLAYER'S INFORMATION----------------------------------------
+    20000:  205:		thisHand = G.handCount[otherPlayer];
+    20000:  206:		testHand = testG.handCount[otherPlayer];
+    20000:  207:		thisDeck = G.deckCount[otherPlayer];
+    20000:  208:		testDeck = testG.deckCount[otherPlayer];
+    20000:  209:		printf("\n---- TESTING PLAYER %d DECK AND HAND COUNT ----\n", otherPlayer);
+    20000:  210:		if ((testDeck != thisDeck) || (thisHand != testHand))
+        -:  211:		{
+     6096:  212:			printf("FAILED PLAYER COUNT TEST: \n");
+     6096:  213:			printf("deck count = %d, expected = %d\n", testDeck, thisDeck);
+     6096:  214:			printf("hand count = %d, expected = %d\n", testHand, thisHand);
+     6096:  215:			errors++;
+        -:  216:		}
+        -:  217:		else
+        -:  218:		{
+    13904:  219:			printf("SUCCESS: OTHER PLAYER'S COUNT TEST PASSED!\n");
+        -:  220:		}
+        -:  221:
+        -:  222:		// TEST: VICTORY CARD AND KINGDOM CARD-------------------------------------
+    20000:  223:		printf("\n---- TESTING VICTORY AND KINGDOM CARD PILES ----\n");
+   560000:  224:		for (i = 0; i < treasure_map+1; i++)
+        -:  225:		{
+   540000:  226:			thisSupply = G.supplyCount[i];
+   540000:  227:			testSupply = testG.supplyCount[i];
+   540000:  228:			if (thisSupply != testSupply)
+        -:  229:			{
+    #####:  230:				printf("FAILED SUPPLY COUNT TEST AT: \n");
+    #####:  231:				printf("SUPPLY DECK: %d", i);
+    #####:  232:				printf("deck count = %d, expected = %d\n", testSupply, thisSupply);
+    #####:  233:				j++;
+    #####:  234:				errors++;
+        -:  235:			}
+        -:  236:		}
+    20000:  237:		printf(" KINGDOM CARD TEST COMPLETE WITH %d ERRORS \n", j);
+        -:  238:
+        -:  239:		// END TESTS---------------------------------------------------------------
+    20000:  240:		printf("\nNUMBER OF ERRORS FOUND: %d \n", errors);
+    20000:  241:		printf("\n >>>>> %s TEST COMPLETE <<<<<\n", TESTCARD);
+    20000:  242:		numTests++;
+        -:  243:	}
+        2:  244:	printf("\n\nThe number of tests run was: %d\n\n", numTests);
+        2:  245:	return 0;
+        -:  246:}
+        -:  247:/*****************************************************************************/
